@@ -21,21 +21,21 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
     private BufferedImage moneyIcon, healthIcon, upgradeButtonIcon, playButtonImage;
 
     private int playerMoney = 500;
-    private int playerLives = 200;
-    private int selectedTowerType = 0; // 0=none, 1=gun, 2=ice, 3=bomb
+    private int playerLives = 20;
+    private int selectedTowerType = 0;
     private Tower focusedTower = null;
 
     private WaveManager waveManager;
-    private boolean waveRunning = false;
+    private boolean waveRunning = false; // indicates if a wave is ongoing
     private int currentWaveNumber = 0;
-    private int totalWaves = 40; // number of waves before freeplay
-    private boolean repeatingWaves = true; // repeat first 40 waves
+    private int totalWaves = 40; // total waves before freeplay
+    private boolean repeatingWaves = true;
     private long seed = new Random().nextLong();
 
     private Thread gameThread;
     private boolean running = false;
 
-    // Button positions
+    // UI Buttons positions
     private int playButtonX, playButtonY, playButtonWidth, playButtonHeight;
     private int upgradeButtonX, upgradeButtonY, upgradeButtonWidth, upgradeButtonHeight;
 
@@ -49,7 +49,6 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         map = new Map();
         waveManager = new WaveManager(seed);
 
-        // Load start wave button image
         try {
             playButtonImage = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Button/playButton.png"));
             playButtonWidth = 150;
@@ -60,7 +59,6 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
             e.printStackTrace();
         }
 
-        // Load upgrade button icon
         try {
             upgradeButtonIcon = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Button/playButton.png"));
             upgradeButtonWidth = 120;
@@ -119,7 +117,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
     private void updateGame(double dt) {
         if (playerLives <= 0) {
-            running = false;
+            running = false; // game over
             return;
         }
 
@@ -151,14 +149,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         // Update spawn scheduler
         EnemySpawnScheduler.update(dt, enemies);
 
-        // Check if wave ended and trigger next
-        if (!waveRunning && enemies.isEmpty() && currentWaveNumber > 0) {
-            startNextWaveTrigger();
+        // Check if wave ended
+        if (enemies.isEmpty() && waveRunning) {
+            waveRunning = false; // wave just finished, user can trigger next
         }
     }
 
-    // Renamed method to avoid conflicts
-    private void startNextWaveTrigger() {
+    private void startNextWave() {
         if (currentWaveNumber < totalWaves) {
             waveManager.startNextWave(enemies, map.getPath());
             currentWaveNumber++;
@@ -170,7 +167,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
             waveManager.startNextWave(enemies, map.getPath());
             currentWaveNumber++;
         }
-        waveRunning = true;
+        waveRunning = true; // mark wave is now active
     }
 
     @Override
@@ -195,7 +192,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
         drawHUD(g2);
 
-        // Upgrade button with icon
+        // Draw upgrade button if applicable
         if (focusedTower != null && focusedTower.canUpgrade()) {
             int bx = Map.WIDTH * Map.TILE_SIZE + 20;
             int by = 50;
@@ -209,7 +206,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
             }
         }
 
-        // Start wave button
+        // Draw start wave button
         if (playButtonImage != null) {
             g2.drawImage(playButtonImage, playButtonX, playButtonY, playButtonWidth, playButtonHeight, null);
         }
@@ -244,11 +241,11 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         int x = e.getX();
         int y = e.getY();
 
-        // Check if click is on start wave button
+        // Check if start wave button clicked
         if (x >= playButtonX && x <= playButtonX + playButtonWidth
             && y >= playButtonY && y <= playButtonY + playButtonHeight) {
             if (!waveRunning) {
-                startNextWaveTrigger();
+                startNextWave();
             }
             return;
         }
@@ -257,7 +254,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         int tileY = y / Map.TILE_SIZE;
         if (tileY >= Map.HEIGHT) return;
 
-        // Check if click is on a tower
+        // Check if clicked on a tower
         focusedTower = null;
         for (Tower t : towers) {
             Point gp = t.getGridPosition();
@@ -278,7 +275,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 return; // Out of bounds
             for (Tower t : towers) {
                 if (t.getGridPosition().equals(clickTile))
-                    return; // Already occupied
+                    return; // Occupied
             }
 
             // Place tower
@@ -308,13 +305,13 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // Handle upgrade button click
         if (focusedTower != null && focusedTower.canUpgrade()) {
             int mx = e.getX();
             int my = e.getY();
             int bx = Map.WIDTH * Map.TILE_SIZE + 20;
             int by = 50;
-            if (mx >= bx && mx <= bx + upgradeButtonWidth && my >= by && my <= by + upgradeButtonHeight) {
+            if (mx >= bx && mx <= bx + upgradeButtonWidth
+                && my >= by && my <= by + upgradeButtonHeight) {
                 int cost = focusedTower.getUpgradeCost();
                 if (playerMoney >= cost) {
                     focusedTower.upgrade();
@@ -324,12 +321,9 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         }
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-    @Override
-    public void mouseExited(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {}
+    @Override public void mouseExited(MouseEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -345,7 +339,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
                 break;
             case KeyEvent.VK_SPACE:
                 if (!waveRunning) {
-                    startNextWaveTrigger();
+                    startNextWave();
                 }
                 break;
             case KeyEvent.VK_ESCAPE:
@@ -355,20 +349,4 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
     }
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void keyTyped(KeyEvent e) {}
-
-    // Method to start next wave considering the wave count logic
-    private void triggerStartNextWave() {
-        if (currentWaveNumber < totalWaves) {
-            waveManager.startNextWave(enemies, map.getPath());
-            currentWaveNumber++;
-        } else if (!repeatingWaves) {
-            seed = new Random().nextLong();
-            waveManager = new WaveManager(seed);
-            waveManager.startNextWave(enemies, map.getPath());
-        } else {
-            waveManager.startNextWave(enemies, map.getPath());
-            currentWaveNumber++;
-        }
-        waveRunning = true;
-    }
 }

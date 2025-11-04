@@ -20,10 +20,10 @@ public class Map {
 
     private void loadTiles(){
         try{
-            tileGrass = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_grass.png"));
-            tilePath  = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_path.png"));
-            tileSpawn = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_spawn.png"));
-            tileGoal  = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_goal.png"));
+            tileGrass = ImageIO.read(new File("Assets/Tiles/tile_grass.png"));
+            tilePath  = ImageIO.read(new File("Assets/Tiles/tile_path.png"));
+            tileSpawn = ImageIO.read(new File("Assets/Tiles/tile_spawn.png"));
+            tileGoal  = ImageIO.read(new File("Assets/Tiles/tile_goal.png"));
         } catch(IOException e){ e.printStackTrace(); }
     }
 

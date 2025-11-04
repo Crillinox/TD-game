@@ -15,7 +15,7 @@ public class BombTower extends Tower {
         super(x, y);
         if(sprite == null) {
             try {
-                this.sprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Towers/bombShooter.png"));
+                this.sprite = ImageIO.read(new File("Assets/Towers/bombShooter.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }

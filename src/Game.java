@@ -50,7 +50,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         waveManager = new WaveManager(seed);
 
         try {
-            playButtonImage = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Button/playButton.png"));
+            playButtonImage = ImageIO.read(new File("Assets/Button/playButton.png"));
             playButtonWidth = 150;
             playButtonHeight = 50;
             playButtonX = Map.WIDTH * Map.TILE_SIZE - playButtonWidth - 20;
@@ -60,7 +60,7 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
         }
 
         try {
-            upgradeButtonIcon = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Button/playButton.png"));
+            upgradeButtonIcon = ImageIO.read(new File("Assets/Button/playButton.png"));
             upgradeButtonWidth = 120;
             upgradeButtonHeight = 40;
             upgradeButtonX = Map.WIDTH * Map.TILE_SIZE + 20;
@@ -74,21 +74,21 @@ public class Game extends JPanel implements Runnable, MouseListener, KeyListener
 
     private void loadSprites() {
         try {
-            gunTowerSprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Towers/GunTower.png"));
-            iceTowerSprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Towers/IceTower.png"));
-            bombTowerSprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Towers/bombShooter.png"));
+            gunTowerSprite = ImageIO.read(new File("Assets/Towers/GunTower.png"));
+            iceTowerSprite = ImageIO.read(new File("Assets/Towers/IceTower.png"));
+            bombTowerSprite = ImageIO.read(new File("Assets/Towers/bombShooter.png"));
 
-            normalEnemySprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Enemies/normalEnemy.png"));
-            fastEnemySprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Enemies/fastEnemy.png"));
-            tankEnemySprite = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Enemies/tankEnemy.png"));
+            normalEnemySprite = ImageIO.read(new File("Assets/Enemies/normalEnemy.png"));
+            fastEnemySprite = ImageIO.read(new File("Assets/Enemies/fastEnemy.png"));
+            tankEnemySprite = ImageIO.read(new File("Assets/Enemies/tankEnemy.png"));
 
-            tileGrass = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_grass.png"));
-            tilePath = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_path.png"));
-            tileSpawn = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_spawn.png"));
-            tileGoal = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Tiles/tile_goal.png"));
+            tileGrass = ImageIO.read(new File("Assets/Tiles/tile_grass.png"));
+            tilePath = ImageIO.read(new File("Assets/Tiles/tile_path.png"));
+            tileSpawn = ImageIO.read(new File("Assets/Tiles/tile_spawn.png"));
+            tileGoal = ImageIO.read(new File("Assets/Tiles/tile_goal.png"));
 
-            moneyIcon = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Button/moneyIcon.png"));
-            healthIcon = ImageIO.read(new File("/home/jordans/TowerDefense/Assets/Button/healthIcon.png"));
+            moneyIcon = ImageIO.read(new File("Assets/Button/moneyIcon.png"));
+            healthIcon = ImageIO.read(new File("Assets/Button/healthIcon.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
